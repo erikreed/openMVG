@@ -417,6 +417,7 @@ bool GlobalSfMReconstructionEngine_RelativeMotions::Adjust()
   // Refine sfm_scene (in a 3 iteration process (free the parameters regarding their incertainty order)):
 
   Bundle_Adjustment_Ceres bundle_adjustment_obj;
+  bundle_adjustment_obj.ceres_options().bUse_loss_function_ = false;
   // - refine only Structure and translations
   bool b_BA_Status = bundle_adjustment_obj.Adjust
     (
@@ -456,6 +457,7 @@ bool GlobalSfMReconstructionEngine_RelativeMotions::Adjust()
     }
   }
 
+  bundle_adjustment_obj.ceres_options().bUse_loss_function_ = true;
   if (b_BA_Status && ReconstructionEngine::intrinsic_refinement_options_ != Intrinsic_Parameter_Type::NONE) {
     // - refine all: Structure, motion:{rotations, translations} and optics:{intrinsics}
     b_BA_Status = bundle_adjustment_obj.Adjust
